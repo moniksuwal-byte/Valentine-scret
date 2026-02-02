@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Will You Be My Valentine? ❤️</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',Arial,sans-serif;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  overflow:hidden;
+}
+
+.card{
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  text-align:center;
+  width:90%;
+  max-width:360px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  z-index:2;
+}
+
+.card img{
+  width:120px;
+  border-radius:50%;
+  margin-bottom:12px;
+}
+
+h1{color:#ff4d6d;}
+p{color:#555;}
+
+input{
+  padding:12px;
+  width:100%;
+  border-radius:20px;
+  border:1px solid #ddd;
+  margin-bottom:15px;
+  text-align:center;
+  font-size:16px;
+}
+
+.buttons{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-top:20px;
+}
+
+button{
+  border:none;
+  padding:14px 26px;
+  border-radius:30px;
+  cursor:pointer;
+  transition:.3s;
+  font-size:16px;
+}
+
+#yesBtn{
+  background:#ff4d6d;
+  color:white;
+  font-size:18px;
+}
+
+#noBtn{
+  background:#eee;
+}
+
+video{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:none;
+  z-index:1;
+}
+
+.heart{
+  position:fixed;
+  bottom:-20px;
+  animation:floatUp 4s linear forwards;
+  z-index:3;
+}
+
+@keyframes floatUp{
+  to{transform:translateY(-100vh);opacity:0;}
+}
+
+.final-text{
+  color:white;
+  text-align:center;
+  font-size:28px;
+  padding:30px;
+  animation:glow 1.5s infinite alternate;
+}
+
+@keyframes glow{
+  from{text-shadow:0 0 10px #ff9a9e;}
+  to{text-shadow:0 0 30px #fff;}
+}
+
+.popup{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.6);
+  z-index:5;
+}
+
+.popup div{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  max-width:300px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="glue.mp3" type="audio/mpeg">
+</audio>
+
+<video id="fireworks" muted>
+  <source src="fireworks.mp4" type="video/mp4">
+</video>
+
+<div class="card" id="card">
+  <img src="hamster.webp">
+  <h1>Before I ask… 💌</h1>
+  <input id="nameInput" placeholder="Your name 🥺">
+  <button onclick="start()">Continue 💕</button>
+</div>
+
+<script>
+const noTexts=[
+ "Are you sure? 😐",
+ "Think again 🥲",
+ "My heart is shaking 💔",
+ "Pleaseee 🥺",
+ "Last chance 😭"
+];
+
+let index=0,scale=1,name="";
+
+function start(){
+  name=document.getElementById("nameInput").value||"My Love";
+  card.innerHTML=`
+    <img src="hamster.webp">
+    <h1>${name}, will you be my Valentine? 💘</h1>
+    <p>I promise love, care & endless smiles 🥺</p>
+    <div class="buttons">
+      <button id="yesBtn">Yes 😍</button>
+      <button id="noBtn">No 🙃</button>
+    </div>`;
+  
+  document.getElementById("noBtn").onclick=()=>{
+    scale+=.25;
+    document.getElementById("yesBtn").style.transform=`scale(${scale})`;
+    document.getElementById("noBtn").textContent=noTexts[index++%noTexts.length];
+  };
+
+  document.getElementById("yesBtn").onclick=love;
+}
+
+function love(){
+  bgMusic.play().catch(()=>{});
+  fireworks.style.display="block";
+  fireworks.play().catch(()=>{});
+  card.remove();
+
+  document.body.insertAdjacentHTML("beforeend",`
+    <div class="final-text">
+      ${name} 💖<br><br>
+      You just made my world brighter ✨<br>
+      Happy Valentine’s Day 💕
+    </div>`);
+
+  for(let i=0;i<40;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="❤️";
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=20+Math.random()*25+"px";
+    document.body.appendChild(h);
+  }
+
+  setTimeout(()=>{
+    document.body.insertAdjacentHTML("beforeend",`
+      <div class="popup">
+        <div>
+          <h2>I love you 💞</h2>
+          <p>Thank you for saying YES 🥰</p>
+        </div>
+      </div>`);
+  },3500);
+}
+</script>
+
+</body>
+</html>
